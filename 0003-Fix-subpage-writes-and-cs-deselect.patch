@@ -1,4 +1,4 @@
-From 9c6796f2d7cbbb6e8ca4cfbf19a8ff5998c80773 Mon Sep 17 00:00:00 2001
+From 6dd90f7fee0f7eeb490a28b1fc5d4db9a4457537 Mon Sep 17 00:00:00 2001
 From: Stefan Mavrodiev <stefan@olimex.com>
 Date: Fri, 22 Mar 2019 08:25:33 +0200
 Subject: [PATCH 3/3] Fix subpage writes and cs deselect

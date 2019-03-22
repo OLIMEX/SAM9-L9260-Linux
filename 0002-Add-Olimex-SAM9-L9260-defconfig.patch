@@ -1,4 +1,4 @@
-From db4ffa4a94831614a7769898c991d782c62eaa4c Mon Sep 17 00:00:00 2001
+From dbdaf42b9eda466a9dd2ca5f45f1fbeefc46506f Mon Sep 17 00:00:00 2001
 From: Stefan Mavrodiev <stefan@olimex.com>
 Date: Fri, 22 Mar 2019 08:24:41 +0200
 Subject: [PATCH 2/3] Add Olimex SAM9-L9260 defconfig
