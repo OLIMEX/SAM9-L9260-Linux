@@ -1,4 +1,4 @@
-From f8eca99eae9465464db213f89783037864ad4911 Mon Sep 17 00:00:00 2001
+From 936526d669c8c87d44ad99ace5cc8a98c45af2aa Mon Sep 17 00:00:00 2001
 From: Stefan Mavrodiev <stefan@olimex.com>
 Date: Fri, 22 Mar 2019 08:25:33 +0200
 Subject: [PATCH 3/3] Fix subpage writes and cs deselect
@@ -8,7 +8,7 @@ Subject: [PATCH 3/3] Fix subpage writes and cs deselect
  1 file changed, 4 insertions(+)
 
 diff --git a/drivers/mtd/nand/raw/atmel/nand-controller.c b/drivers/mtd/nand/raw/atmel/nand-controller.c
-index 5781fcf6b..7fc1c8450 100644
+index 5781fcf6b..f262796eb 100644
 --- a/drivers/mtd/nand/raw/atmel/nand-controller.c
 +++ b/drivers/mtd/nand/raw/atmel/nand-controller.c
 @@ -487,6 +487,8 @@ static void atmel_nand_select_chip(struct nand_chip *chip, int cs)
@@ -16,7 +16,7 @@ index 5781fcf6b..7fc1c8450 100644
  
  	if (cs < 0 || cs >= nand->numcs) {
 +		if (nand->activecs->csgpio)
-+			gpiod_set_value(nand->activecs->csgpio, 1);
++			gpiod_set_value(nand->activecs->csgpio, 0);
  		nand->activecs = NULL;
  		chip->legacy.dev_ready = NULL;
  		return;
