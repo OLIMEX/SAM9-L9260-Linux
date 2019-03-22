@@ -1,0 +1,34 @@
+From 9c6796f2d7cbbb6e8ca4cfbf19a8ff5998c80773 Mon Sep 17 00:00:00 2001
+From: Stefan Mavrodiev <stefan@olimex.com>
+Date: Fri, 22 Mar 2019 08:25:33 +0200
+Subject: [PATCH 3/3] Fix subpage writes and cs deselect
+
+---
+ drivers/mtd/nand/raw/atmel/nand-controller.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/mtd/nand/raw/atmel/nand-controller.c b/drivers/mtd/nand/raw/atmel/nand-controller.c
+index 5781fcf6b76c..7fc1c8450bde 100644
+--- a/drivers/mtd/nand/raw/atmel/nand-controller.c
++++ b/drivers/mtd/nand/raw/atmel/nand-controller.c
+@@ -487,6 +487,8 @@ static void atmel_nand_select_chip(struct nand_chip *chip, int cs)
+ 	struct atmel_nand *nand = to_atmel_nand(chip);
+ 
+ 	if (cs < 0 || cs >= nand->numcs) {
++		if (nand->activecs->csgpio)
++			gpiod_set_value(nand->activecs->csgpio, 1);
+ 		nand->activecs = NULL;
+ 		chip->legacy.dev_ready = NULL;
+ 		return;
+@@ -1495,6 +1497,8 @@ static void atmel_nand_init(struct atmel_nand_controller *nc,
+ 	/* Default to HW ECC if pmecc is available. */
+ 	if (nc->pmecc)
+ 		chip->ecc.mode = NAND_ECC_HW;
++
++	chip->options |= NAND_NO_SUBPAGE_WRITE;
+ }
+ 
+ static void atmel_smc_nand_init(struct atmel_nand_controller *nc,
+-- 
+2.17.1
+
