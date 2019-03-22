@@ -1,14 +1,29 @@
-From 936526d669c8c87d44ad99ace5cc8a98c45af2aa Mon Sep 17 00:00:00 2001
+From 354d416ec83bd0b428bdf8e961f85e257372fb46 Mon Sep 17 00:00:00 2001
 From: Stefan Mavrodiev <stefan@olimex.com>
 Date: Fri, 22 Mar 2019 08:25:33 +0200
 Subject: [PATCH 3/3] Fix subpage writes and cs deselect
 
 ---
- drivers/mtd/nand/raw/atmel/nand-controller.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpio/gpiolib-of.c                    | 3 ++-
+ drivers/mtd/nand/raw/atmel/nand-controller.c | 8 ++++++--
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index a6e189121..70a31c356 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -118,7 +118,8 @@ static void of_gpio_flags_quirks(struct device_node *np,
+ 	 * to determine if the flags should have inverted semantics.
+ 	 */
+ 	if (IS_ENABLED(CONFIG_SPI_MASTER) &&
+-	    of_property_read_bool(np, "cs-gpios")) {
++	    of_property_read_bool(np, "cs-gpios") &&
++	    !of_device_is_compatible(np->parent, "atmel,at91sam9260-nand-controller")) {
+ 		struct device_node *child;
+ 		u32 cs;
+ 		int ret;
 diff --git a/drivers/mtd/nand/raw/atmel/nand-controller.c b/drivers/mtd/nand/raw/atmel/nand-controller.c
-index 5781fcf6b..f262796eb 100644
+index 5781fcf6b..9d9bfddfc 100644
 --- a/drivers/mtd/nand/raw/atmel/nand-controller.c
 +++ b/drivers/mtd/nand/raw/atmel/nand-controller.c
 @@ -487,6 +487,8 @@ static void atmel_nand_select_chip(struct nand_chip *chip, int cs)
@@ -20,6 +35,18 @@ index 5781fcf6b..f262796eb 100644
  		nand->activecs = NULL;
  		chip->legacy.dev_ready = NULL;
  		return;
+@@ -628,9 +630,9 @@ static void atmel_nand_cmd_ctrl(struct nand_chip *chip, int cmd,
+ 
+ 	if ((ctrl & NAND_CTRL_CHANGE) && nand->activecs->csgpio) {
+ 		if (ctrl & NAND_NCE)
+-			gpiod_set_value(nand->activecs->csgpio, 0);
+-		else
+ 			gpiod_set_value(nand->activecs->csgpio, 1);
++		else
++			gpiod_set_value(nand->activecs->csgpio, 0);
+ 	}
+ 
+ 	if (ctrl & NAND_ALE)
 @@ -1495,6 +1497,8 @@ static void atmel_nand_init(struct atmel_nand_controller *nc,
  	/* Default to HW ECC if pmecc is available. */
  	if (nc->pmecc)

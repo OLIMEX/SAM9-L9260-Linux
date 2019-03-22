@@ -1,4 +1,4 @@
-From f7184fc001ec8f7e61cb7f60b1db34b1bc159cf8 Mon Sep 17 00:00:00 2001
+From e6a4d88a349b70951416a25cde15f34dc4680576 Mon Sep 17 00:00:00 2001
 From: Stefan Mavrodiev <stefan@olimex.com>
 Date: Fri, 22 Mar 2019 08:24:41 +0200
 Subject: [PATCH 2/3] Add Olimex SAM9-L9260 defconfig
@@ -10,7 +10,7 @@ Subject: [PATCH 2/3] Add Olimex SAM9-L9260 defconfig
 
 diff --git a/arch/arm/configs/olimex_sam9_l9260_defconfig b/arch/arm/configs/olimex_sam9_l9260_defconfig
 new file mode 100644
-index 000000000..c7e1ecf56
+index 000000000..c24e79d52
 --- /dev/null
 +++ b/arch/arm/configs/olimex_sam9_l9260_defconfig
 @@ -0,0 +1,3956 @@
